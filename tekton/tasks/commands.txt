@@ -4,6 +4,6 @@ oc create secret generic github-token \
    --from-literal=password=<access token > \
    --type "kubernetes.io/basic-auth" \
 
-oc annotate secret github-sec "tekton.dev/git-0=https://github.com/taiseerhussein"
+oc annotate secret github-sec "tekton.dev/git-0=https://github.com/uc2-io"
 
 oc secrets link pipeline github-sec

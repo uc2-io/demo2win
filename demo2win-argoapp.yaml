@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo2win
+  namespace: openshift-gitops
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+  project: default
+  source:
+    path: kustomize/applicationsets/kustomize-appset-global/dev
+    repoURL: 'https://github.com/uc2-io/demo2win.git'
+    targetRevision: main
+  syncPolicy:
+    automated: {}

@@ -9,7 +9,7 @@ metadata:
   namespace: nodejs-web-app-pipelines
 spec:
   params:
-    - default: 'https://github.com/taiseerhussein/php-hello-dockerfile.git'
+    - default: 'https://github.com/uc2-io/php-hello-dockerfile.git'
       description: url of the git repo for the code of deployment
       name: git-url
       type: string
@@ -21,7 +21,7 @@ spec:
       description: image to be build from the code
       name: IMAGEREPO
       type: string
-    - default: 'https://github.com/taiseerhussein/php-hello-dockerfile.git'
+    - default: 'https://github.com/uc2-io/php-hello-dockerfile.git'
       description: The kustomize git repository url
       name: KUSTOMIZE_GIT_URL
       type: string
@@ -150,7 +150,7 @@ spec:
     - name: update-kustomize-repo
       params:
         - name: gitRepositoryUrl
-          value: 'https://github.com/taiseerhussein/baseline-demo'
+          value: 'https://github.com/uc2-io/baseline-demo'
         - name: gitRepositoryRevision
           value: main
         - name: gitPath

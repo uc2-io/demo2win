@@ -28,13 +28,13 @@ spec:
       spec:
         params:
           - name: git-url
-            value: 'https://github.com/taiseerhussein/php-hello-dockerfile.git'
+            value: 'https://github.com/uc2-io/php-hello-dockerfile.git'
           - name: git-revision
             value: main
           - name: IMAGEREPO
             value: 'image-registry.openshift-image-registry.svc:5000/nodejs-web-app-pipelines/php-hello-sample'
           - name: KUSTOMIZE_GIT_URL
-            value: 'https://github.com/taiseerhussein/php-hello-dockerfile.git'
+            value: 'https://github.com/uc2-io/php-hello-dockerfile.git'
           - name: KUSTOMIZE_ENV
             value: dev
           - name: IMAGETAG
