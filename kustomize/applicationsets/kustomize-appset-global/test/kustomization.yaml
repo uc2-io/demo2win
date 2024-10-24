@@ -2,8 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- ../..baseline-demophp-hello/overlays/test
-- ../..baseline-demovalue-add/overlays/test
+- ../..demo2winphp-hello/overlays/test
+- ../..demo2winvalue-add/overlays/test
 - ../../backbase/overlays/test
 
 # Create sealed secret appsets
