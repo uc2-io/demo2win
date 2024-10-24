@@ -5,5 +5,5 @@ resources:
 - base-deployment.yaml
 - base-route.yaml
 - base-service.yaml
-# - demo2win.yaml
+# - baseline-demo.yaml
 # - php-hello.yaml

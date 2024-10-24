@@ -12,6 +12,6 @@ patches:
         elements: 
         - cluster: dev
           url: https://kubernetes.default.svc
-          namespace: dev-demo2win
+          namespace: dev-baseline-demo
   target:
     kind: ApplicationSet

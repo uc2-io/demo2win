@@ -150,7 +150,7 @@ spec:
     - name: update-kustomize-repo
       params:
         - name: gitRepositoryUrl
-          value: 'https://github.com/uc2-io/demo2win'
+          value: 'https://github.com/uc2-io/baseline-demo'
         - name: gitRepositoryRevision
           value: main
         - name: gitPath

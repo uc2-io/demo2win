@@ -15,7 +15,7 @@ spec:
       name: '{{cluster}}-pipeline-creation'
     spec:
       source:
-        repoURL: https://github.com/uc2-io/demo2win
+        repoURL: https://github.com/uc2-io/baseline-demo
         targetRevision: main
         path: tekton
       project: default
