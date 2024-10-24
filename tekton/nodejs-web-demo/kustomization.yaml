@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- nodejs-web-demo-trigger-template.yaml
+- nodejs-web-demo-el.yaml
+- el-nodejs-web-demo-route.yaml
+- nodejs-web-demo-pipeline.yaml

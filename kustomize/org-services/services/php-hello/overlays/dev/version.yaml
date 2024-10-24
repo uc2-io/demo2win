@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-hello
+spec:
+  template:
+    spec:
+      containers:
+      - image: quay.io/tkhussein/php-hello:56a1361f0ef8104f6e10a4ea9ff64780656a8a68
+        name: php-hello

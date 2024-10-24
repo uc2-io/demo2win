@@ -1,0 +1,172 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: '2'
+  labels:
+    app.kubernetes.io/instance: pipeline
+  name: php-hello-pipeline
+  namespace: nodejs-web-app-pipelines
+spec:
+  params:
+    - default: 'https://github.com/taiseerhussein/php-hello-dockerfile.git'
+      description: url of the git repo for the code of deployment
+      name: git-url
+      type: string
+    - default: main
+      description: revision to be used from repo of the code for deployment
+      name: git-revision
+      type: string
+    - default: image-registry.openshift-image-registry.svc:5000/nodejs-web-app-pipelines/php-hello-sample
+      description: image to be build from the code
+      name: IMAGEREPO
+      type: string
+    - default: 'https://github.com/taiseerhussein/php-hello-dockerfile.git'
+      description: The kustomize git repository url
+      name: KUSTOMIZE_GIT_URL
+      type: string
+    - default: dev
+      description: The target env
+      name: KUSTOMIZE_ENV
+      type: string
+    - default: v3.0.4
+      description: The target image tag
+      name: IMAGETAG
+      type: string
+    - default: main
+      description: The kustomize git repository revision
+      name: KUSTOMIZE_GIT_REVISION
+      type: string
+    - default: kustomize/org-services/services
+      description: The subdirectory in the kustomize git repository
+      name: KUSTOMIZE_GIT_CONTEXT_DIR
+      type: string
+    - default: php-hello/overlays/$(params.KUSTOMIZE_ENV)/version.yaml
+      description: The YAML file in which to patch the image
+      name: KUSTOMIZE_GIT_FILE_NAME
+      type: string
+  tasks:
+    - name: git-clone
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.git-revision)
+        - name: submodules
+          value: 'true'
+        - name: depth
+          value: '1'
+        - name: sslVerify
+          value: 'true'
+        - name: deleteExisting
+          value: 'true'
+        - name: verbose
+          value: 'true'
+        - name: gitInitImage
+          value: 'gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.29.0'
+        - name: userHome
+          value: /tekton/home
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+    - name: build-image
+      params:
+        - name: IMAGE
+          value: '$(params.IMAGEREPO):demo'
+        - name: BUILDER_IMAGE
+          value: 'registry.redhat.io/rhel8/buildah@sha256:55f5c7d88c77e1ab5a2ab8e877172b2b66cb196e21f10dc45148470d0ee8bbae'
+        - name: FORMAT
+          value: docker
+        - name: SKIP_PUSH
+          value: 'false'
+        - name: TLSVERIFY
+          value: 'false'
+        - name: BUILD_EXTRA_ARGS
+          value: ''
+        - name: PUSH_EXTRA_ARGS
+          value: ''
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: ClusterTask
+        name: buildah
+      workspaces:
+        - name: source
+          workspace: shared-workspace
+    - name: acs-image-scan
+      params:
+        - name: rox_central_endpoint
+          value: roxsecrets
+        - name: rox_api_token
+          value: roxsecrets
+        - name: image
+          value: 'default-route-openshift-image-registry.apps.baseline.sandbox1654.opentlc.com/nodejs-web-app-pipelines/php-hello-sample:demo'
+        - name: output_format
+          value: json
+        - name: insecure-skip-tls-verify
+          value: 'true'
+      runAfter:
+        - build-image
+      taskRef:
+        kind: Task
+        name: acs-image-scan
+    - name: acs-image-check
+      params:
+        - name: rox_central_endpoint
+          value: roxsecrets
+        - name: rox_api_token
+          value: roxsecrets
+        - name: image
+          value: 'default-route-openshift-image-registry.apps.baseline.sandbox1654.opentlc.com/nodejs-web-app-pipelines/php-hello-sample:demo'
+        - name: insecure-skip-tls-verify
+          value: 'true'
+      runAfter:
+        - acs-image-scan
+      taskRef:
+        kind: Task
+        name: acs-image-check
+    - name: push-image
+      params:
+        - name: srcImageURL
+          value: >-
+            docker://$(params.IMAGEREPO):demo
+        - name: destImageURL
+          value: 'docker://quay.io/tkhussein/php-hello:$(tasks.git-clone.results.commit)'
+        - name: srcTLSverify
+          value: 'false'
+        - name: destTLSverify
+          value: 'false'
+      runAfter:
+        - acs-image-check
+      taskRef:
+        kind: ClusterTask
+        name: skopeo-copy
+      workspaces:
+        - name: images-url
+          workspace: shared-workspace
+    - name: update-kustomize-repo
+      params:
+        - name: gitRepositoryUrl
+          value: 'https://github.com/taiseerhussein/baseline-demo'
+        - name: gitRepositoryRevision
+          value: main
+        - name: gitPath
+          value: $(params.KUSTOMIZE_GIT_CONTEXT_DIR)
+        - name: fileName
+          value: $(params.KUSTOMIZE_GIT_FILE_NAME)
+        - name: image
+          value: quay.io/tkhussein/php-hello
+        - name: imageTag
+          value: $(tasks.git-clone.results.commit)
+        - name: verbose
+          value: 'true'
+      runAfter:
+        - push-image
+      taskRef:
+        kind: Task
+        name: update-kustomize-repo
+  workspaces:
+    - name: shared-workspace

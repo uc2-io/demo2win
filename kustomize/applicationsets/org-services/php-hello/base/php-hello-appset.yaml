@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: php-hello
+  namespace: openshift-gitops
+spec:
+  generators:
+  - list:
+      elements:
+      # Patch the generators
+  template:
+    metadata:
+      name: '{{cluster}}-{{namespace}}-php-hello'
+    spec:
+      source:
+        repoURL: https://github.com/taiseerhussein/baseline-demo
+        targetRevision: main
+        path: kustomize/org-services/services/php-hello/overlays/{{cluster}}
+      project: default
+      destination:
+        server: '{{url}}'
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+  

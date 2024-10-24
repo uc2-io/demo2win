@@ -1,0 +1,18 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+  name: nodejs-web-demo-event-listener
+  namespace: nodejs-web-app-pipelines
+spec:
+  namespaceSelector: {}
+  resources: {}
+  serviceAccountName: pipeline
+  triggers:
+    - bindings:
+        - kind: ClusterTriggerBinding
+          ref: github-push
+      template:
+        ref: trigger-template-nodejs-web-demo-pipeline
+

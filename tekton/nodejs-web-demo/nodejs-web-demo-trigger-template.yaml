@@ -1,0 +1,61 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  name: trigger-template-nodejs-web-demo-pipeline
+  namespace: nodejs-web-app-pipelines
+spec:
+  params:
+    - name: git-revision
+    - name: git-commit-message
+    - name: git-repo-url
+    - name: git-repo-name
+    - name: content-type
+    - name: pusher-name
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1
+      kind: PipelineRun
+      metadata:
+        annotations:
+          argocd.argoproj.io/sync-wave: '2'
+          pipeline.openshift.io/started-by: 'kube:admin'
+        generateName: nodejs-web-pipeline-
+        labels:
+          app.kubernetes.io/instance: dev-pipeline-creation
+          tekton.dev/pipeline: nodejs-web-pipeline
+        namespace: nodejs-web-app-pipelines
+      spec:
+        params:
+          - name: git-url
+            value: 'https://github.com/taiseerhussein/baseline-nodejs-web-app.git'
+          - name: git-revision
+            value: main
+          - name: IMAGEREPO
+            value: image-registry.openshift-image-registry.svc:5000/nodejs-web-app-pipelines/web-nodejs-sample
+          - name: KUSTOMIZE_GIT_URL
+            value: 'https://github.com/taiseerhussein/baseline-nodejs-web-app.git'
+          - name: KUSTOMIZE_ENV
+            value: dev
+          - name: IMAGETAG
+            value: v3.0.4
+          - name: KUSTOMIZE_GIT_REVISION
+            value: main
+          - name: KUSTOMIZE_GIT_CONTEXT_DIR
+            value: kustomize/org-services/services
+          - name: KUSTOMIZE_GIT_FILE_NAME
+            value: nodejs-web-demo/overlays/$(params.KUSTOMIZE_ENV)/version.yaml
+        pipelineRef:
+          name: nodejs-web-pipeline
+        status: null
+        workspaces:
+          - name: shared-workspace
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
+                storageClassName: gp3-csi
+                volumeMode: Filesystem
