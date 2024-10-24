@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: namespaces-creation
-  namespace: demo2win-gitops
+  namespace: openshift-gitops
 spec:
   generators:
   - list:
@@ -21,7 +21,7 @@ spec:
       project: default
       destination:
         server: '{{url}}'
-        namespace: demo2win-gitops
+        namespace: openshift-gitops
       syncPolicy:
         automated:
           prune: true

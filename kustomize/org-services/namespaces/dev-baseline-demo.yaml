@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: dev-baseline-demo
   labels:
-    argocd.argoproj.io/managed-by: demo2win-gitops
+    argocd.argoproj.io/managed-by: openshift-gitops

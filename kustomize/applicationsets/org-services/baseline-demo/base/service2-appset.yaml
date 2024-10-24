@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: service2
-  namespace: demo2win-gitops
+  namespace: openshift-gitops
 spec:
   generators:
   - list:
