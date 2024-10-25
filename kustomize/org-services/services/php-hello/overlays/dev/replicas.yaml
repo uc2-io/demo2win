@@ -4,4 +4,4 @@ metadata:
   name: php-hello
   namespace: dev-php-hello
 spec:
-  replicas: 2
+  replicas: 1
