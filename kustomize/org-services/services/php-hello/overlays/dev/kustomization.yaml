@@ -4,6 +4,5 @@ resources:
 - ../../base
 
 patchesStrategicMerge:
-- configmap.yaml
 - replicas.yaml
 - version.yaml

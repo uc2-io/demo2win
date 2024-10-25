@@ -4,13 +4,13 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
   labels:
-    app: REPLACE_ME
-  name: REPLACE_ME
+    app: php-hello
+  name: php-hello
   namespace: dev-php-hello
 spec:
   port:
     targetPort: 8080-tcp
   to:
     kind: Service
-    name: REPLACE_ME
+    name: php-hello
     weight: 100

@@ -4,20 +4,20 @@ metadata:
    annotations:
     argocd.argoproj.io/sync-wave: "2"
    labels:
-     app: REPLACE_ME
-   name: REPLACE_ME
+     app: php-hello
+   name: php-hello
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: REPLACE_ME
+      app: php-hello
   strategy: {}
   template:
     metadata:
       labels:
-        app: REPLACE_ME
+        app: php-hello
     spec:
       containers:
       - image: quay.io/tkhussein/php-hello:latest
-        name: REPLACE_ME
+        name: php-hello
         resources: {}

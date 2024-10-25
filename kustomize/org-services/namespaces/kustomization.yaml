@@ -1,9 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- dev-baseline-demo.yaml
-- dev-php-hello.yaml
-# - dev-namespace3.yaml
-- prod-baseline-demo.yaml
-# - prod-php-hello.yaml
-# - prod-namespace3.yaml
