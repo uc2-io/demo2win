@@ -4,4 +4,3 @@ data:
 kind: ConfigMap
 metadata:
   name: php-hello
-  namespace: dev-php-hello
