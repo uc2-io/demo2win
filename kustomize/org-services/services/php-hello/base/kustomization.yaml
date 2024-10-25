@@ -5,6 +5,7 @@ resources:
 - configmap.yaml
 # - base-deployment.yaml
 - ../../../common/manifest-base/
+- dev-php-hello.yaml
 
 patches:
 - patch: |- 
