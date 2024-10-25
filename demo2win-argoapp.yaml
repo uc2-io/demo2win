@@ -1,16 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: baseline-demo
-  namespace: openshift-gitops
+  name: demo2win
+  namespace: uc2-openshift-gitops
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
   project: default
   source:
-    path: kustomize/applicationsets/kustomize-appset-global/dev
+    path: kustomize/org-services/services/php-hello/overlays/dev
     repoURL: 'https://github.com/uc2-io/demo2win.git'
     targetRevision: main
   syncPolicy:
     automated: {}
-  
